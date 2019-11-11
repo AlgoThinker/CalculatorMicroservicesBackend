@@ -54,6 +54,8 @@ public class RESTHandlerController {
 	}
 
 	public Double evaluate(String exp) {
+		
+		logger.info("Expression to be evaluated is {}",exp);
 	
 		String expression = preprocessString(exp);
 
