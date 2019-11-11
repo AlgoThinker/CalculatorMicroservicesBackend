@@ -38,18 +38,24 @@ public class RESTHandlerController {
 	@PostMapping("api-gateway")
 	String performOperation(@RequestBody String expression) {
 	
-		return Double.toString(RESTHandlerController.evaluate(expression));
+		try{
+			return Double.toString(evaluate(expression));
+		}catch(Exception e){
+			logger.error("An exception occurred",e);
+			return "Invalid Input";
+		}
 
 	}
 
-	public static Double evaluate(String exp) {
+	public Double evaluate(String exp) {
 
 		String expSpacePlus = exp.replaceAll("\\+", " \\+ ");
 		String expSpaceMinus = expSpacePlus.replaceAll("-", " - ");
 		String expSpaceDivision = expSpaceMinus.replaceAll("/", " / ");
 		String expSpaceMulti = expSpaceDivision.replaceAll("\\*", " \\* ");
 		String expSpaceBracket = expSpaceMulti.replaceAll("\\(", " \\( ");
-		String expression = expSpaceBracket.replaceAll("\\)", " \\) ");
+		String expMayBewithBrackets = expSpaceBracket.replaceAll("\\)", " \\) ");
+		String expression = " ( "+expMayBewithBrackets+" ) ";
 		
 		System.out.print(expression);
 
@@ -121,18 +127,22 @@ public class RESTHandlerController {
 
 	// A utility method to apply an operator 'op' on operands 'a'
 	// and 'b'. Return the result.
-	public static Double applyOp(char op, Double b, Double a) {
+	public Double applyOp(char op, Double b, Double a) {
 		switch (op) {
 		case '+':
-			return a + b;
+			return Double.parseDouble(additionProxy.addTheOperands(Double.toString(a),
+					Double.toString(b)));
 		case '-':
-			return a - b;
+			return Double.parseDouble(subtractionProxy.subtractTheOperands(Double.toString(a),
+					Double.toString(b)));
 		case '*':
-			return a * b;
+			return Double.parseDouble(multiplicationProxy.multiplyTheOperands(Double.toString(a),
+					Double.toString(b)));
 		case '/':
 			if (b == 0)
 				throw new UnsupportedOperationException("Cannot divide by zero");
-			return a / b;
+			return Double.parseDouble(divisionProxy.divideTheOperands(Double.toString(a),
+					Double.toString(b)));
 		}
 		return 0.0;
 	}
