@@ -39,6 +39,9 @@ public class RESTHandlerController {
 	String performOperation(@RequestBody String expression) {
 	
 		try{
+			if(expression.contains("%")){
+				return "Percentage is not supported yet";
+			}
 			return Double.toString(evaluate(expression));
 		}catch(Exception e){
 			logger.error("An exception occurred",e);
